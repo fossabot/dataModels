@@ -37,7 +37,6 @@ try {
 // Path Scan function
 
 const dive = function(basePath, schemas) {
-
   debug('*dive* basePath: ' + basePath);
   debug('*dive* processPath: ' + process.cwd());
 
@@ -54,75 +53,93 @@ const dive = function(basePath, schemas) {
   debug('*dive* fullPath: ' + fullPath);
 
   //Is it a Data Model directory?
-  if (!conf.nconf.get('dmv:ignoreFolders')
-    .includes(path.basename(fullPath)) &&
-    !conf.nconf.get('dmv:docFolders')
-    .includes(path.basename(fullPath)) &&
-    !conf.nconf.get('dmv:externalSchemaFolders')
-    .includes(path.basename(fullPath))) {
-
+  if (
+    !conf.nconf.get('dmv:ignoreFolders').includes(path.basename(fullPath)) &&
+    !conf.nconf.get('dmv:docFolders').includes(path.basename(fullPath)) &&
+    !conf.nconf
+      .get('dmv:externalSchemaFolders')
+      .includes(path.basename(fullPath))
+  ) {
     //let's run the configured checkers
     debug('*dive* running checkers');
 
     //is the modelNameValid?
-    if (path.basename(basePath) !== 'dataModels' &&
+    if (
+      path.basename(basePath) !== 'dataModels' &&
       conf.nconf.get('dmv:warningChecks').includes('modelNameValid') &&
-      !conf.ignoreWarnings) {
+      !conf.ignoreWarnings
+    ) {
       checks.modelNameValid(fullPath);
     }
 
     //does the data model include a documentation folder?
-    if (path.basename(basePath) !== 'dataModels' &&
+    if (
+      path.basename(basePath) !== 'dataModels' &&
       conf.nconf.get('dmv:warningChecks').includes('docFolderExist') &&
-      !conf.ignoreWarnings) {
+      !conf.ignoreWarnings
+    ) {
       checks.docFolderExist(fullPath);
     }
 
     //is there a JSON Schema file?
-    if (path.basename(basePath) !== 'dataModels' &&
+    if (
+      path.basename(basePath) !== 'dataModels' &&
       conf.nconf.get('dmv:warningChecks').includes('schemaExist') &&
-      !conf.ignoreWarnings) {
+      !conf.ignoreWarnings
+    ) {
       checks.schemaExist(fullPath);
     }
 
     //is there one or more JSON Example
-    if (path.basename(basePath) !== 'dataModels' &&
+    if (
+      path.basename(basePath) !== 'dataModels' &&
       conf.nconf.get('dmv:warningChecks').includes('exampleExist') &&
-      !conf.ignoreWarnings) {
+      !conf.ignoreWarnings
+    ) {
       checks.exampleExist(fullPath);
     }
 
     //is there a readme file?
-    if (conf.nconf.get('dmv:warningChecks').includes('readmeExist') &&
-      !conf.ignoreWarnings) {
+    if (
+      conf.nconf.get('dmv:warningChecks').includes('readmeExist') &&
+      !conf.ignoreWarnings
+    ) {
       checks.readmeExist(fullPath);
     }
 
     //are links in the documentation valid? TODO
-    if (path.basename(basePath) !== 'dataModels' &&
+    if (
+      path.basename(basePath) !== 'dataModels' &&
       conf.nconf.get('dmv:warningChecks').includes('docValidLinks') &&
-      !conf.ignoreWarnings) {
+      !conf.ignoreWarnings
+    ) {
       checks.docValidLinks(fullPath);
     }
 
     //is the documentation valid? TODO
-    if (path.basename(basePath) !== 'dataModels' &&
+    if (
+      path.basename(basePath) !== 'dataModels' &&
       conf.nconf.get('dmv:warningChecks').includes('docValid') &&
-      !conf.ignoreWarnings) {
+      !conf.ignoreWarnings
+    ) {
       checks.docValid(fullPath);
     }
 
     //is the schema id matching the name of the folder? TODO
-    if (path.basename(basePath) !== 'dataModels' &&
+    if (
+      path.basename(basePath) !== 'dataModels' &&
       conf.nconf.get('dmv:warningChecks').includes('idMatching') &&
-      !conf.ignoreWarnings) {
+      !conf.ignoreWarnings
+    ) {
       checks.idMatching(fullPath);
     }
 
     //does it exists the documentation of the data model?
-    if (path.basename(basePath) !== 'dataModels' &&
+    if (
+      path.basename(basePath) !== 'dataModels' &&
       !conf.ignoreWarnings &&
-      conf.nconf.get('dmv:warningChecks').includes('docExist')) {
+      conf.nconf.get('dmv:warningChecks').includes('docExist')
+    ) {
       checks.docExist(fullPath);
     }
 
@@ -130,10 +147,13 @@ const dive = function(basePath, schemas) {
       //schema compilation and example validation
       let validate;
 
-      if (conf.nconf.get('dmv:loadModelCommonSchemas') &&
-        checks.fileExists(fullPath, '.+-schema.json')) {
-
-        const schemaFiles = schema.getFiles(fullPath + path.sep + '*-schema.json');
+      if (
+        conf.nconf.get('dmv:loadModelCommonSchemas') &&
+        checks.fileExists(fullPath, '.+-schema.json')
+      ) {
+        const schemaFiles = schema.getFiles(
+          fullPath + path.sep + '*-schema.json'
+        );
         debug('*dive* validate common schemas :' + schemaFiles);
         if (!conf.nconf.get('dmv:resolveRemoteSchemas')) {
           schemaFiles.forEach(function(fileName) {
@@ -145,53 +165,66 @@ const dive = function(basePath, schemas) {
             );
           });
         } else {
-          console.error('**** asynch compile is not implemented, ' +
-            "don't use yet the dmv:resolveRemoteSchemas option ****");
-          throw new Error('asynch compile is not implemented,  ' +
-            "don't use yet dmv:resolveRemoteSchemas option");
+          console.error(
+            '**** asynch compile is not implemented, ' +
+              "don't use yet the dmv:resolveRemoteSchemas option ****"
+          );
+          throw new Error(
+            'asynch compile is not implemented,  ' +
+              "don't use yet dmv:resolveRemoteSchemas option"
+          );
         }
       }
 
-      debug('*dive* load common schemas :' +
-        conf.nconf.get('dmv:loadModelCommonSchemas'));
+      debug(
+        '*dive* load common schemas :' +
+          conf.nconf.get('dmv:loadModelCommonSchemas')
+      );
 
       if (conf.nconf.get('dmv:loadModelCommonSchemas')) {
-        localCommonSchemas =
-          schema.addUniqueToArray(
-            localCommonSchemas,
-            schema.loadLocalSchemas(basePath)
-          );
+        localCommonSchemas = schema.addUniqueToArray(
+          localCommonSchemas,
+          schema.loadLocalSchemas(basePath)
+        );
       }
 
-
-      if (path.basename(basePath) !== 'dataModels' &&
-        checks.fileExists(fullPath, '^schema\\.json')) {
+      if (
+        path.basename(basePath) !== 'dataModels' &&
+        checks.fileExists(fullPath, '^schema\\.json')
+      ) {
         debug('*dive* run schema validation');
         if (!conf.nconf.get('dmv:resolveRemoteSchemas')) {
-          validate =
-            schema.compileSchema(
-              fullPath,
-              'schema.json',
-              localCommonSchemas
-            );
+          validate = schema.compileSchema(
+            fullPath,
+            'schema.json',
+            localCommonSchemas
+          );
         } else {
-          console.error('**** asynch compile is not implemented, ' +
-            "don't use yet the dmv:resolveRemoteSchemas option ****");
-          throw new Error('asynch compile is not implemented,  ' +
-            "don't use yet dmv:resolveRemoteSchemas option");
+          console.error(
+            '**** asynch compile is not implemented, ' +
+              "don't use yet the dmv:resolveRemoteSchemas option ****"
+          );
+          throw new Error(
+            'asynch compile is not implemented,  ' +
+              "don't use yet dmv:resolveRemoteSchemas option"
+          );
         }
       }
 
-      if (path.basename(basePath) !== 'dataModels' &&
+      if (
+        path.basename(basePath) !== 'dataModels' &&
         checks.fileExists(fullPath, '^example(-\\d+)?\\.json') &&
-        conf.nconf.get('dmv:validateExamples')) {
+        conf.nconf.get('dmv:validateExamples')
+      ) {
         debug('*dive* run example validation');
         schema.validateExamples(fullPath, validate);
       }
 
-      if (path.basename(basePath) !== 'dataModels' &&
+      if (
+        path.basename(basePath) !== 'dataModels' &&
         checks.fileExists(fullPath, '^example(-\\d+)?\\.json') &&
-        conf.nconf.get('dmv:contextBroker')) {
+        conf.nconf.get('dmv:contextBroker')
+      ) {
         debug('*dive* check example support');
         checks.exampleSupported(fullPath);
       }
@@ -210,7 +243,6 @@ const dive = function(basePath, schemas) {
             if (stat && stat.isDirectory()) {
               dive(fullPath, localCommonSchemas);
             }
-
           } catch (err) {
             console.log(err);
             if (conf.failErrors) {
@@ -246,16 +278,18 @@ debug('full path common schemas :' + schemas);
 
 dive(scanningPath, schemas);
 
-console.log('*** ValidSchemas ***: ' +
-  JSON.stringify(msg.validSchemas, null, '\t'));
-console.log('*** ValidExamples ***: ' +
-  JSON.stringify(msg.validExamples, null, '\t'));
-console.log('*** SupportedExamples ***: ' +
-  JSON.stringify(msg.supportedExamples, null, '\t'));
-console.log('*** Warnings ***: ' +
-  JSON.stringify(msg.warnings, null, '\t'));
-console.log('*** Errors ***: ' +
-  JSON.stringify(msg.errors, null, '\t'));
+console.log(
+  '*** ValidSchemas ***: ' + JSON.stringify(msg.validSchemas, null, '\t')
+);
+console.log(
+  '*** ValidExamples ***: ' + JSON.stringify(msg.validExamples, null, '\t')
+);
+console.log(
+  '*** SupportedExamples ***: ' +
+    JSON.stringify(msg.supportedExamples, null, '\t')
+);
+console.log('*** Warnings ***: ' + JSON.stringify(msg.warnings, null, '\t'));
+console.log('*** Errors ***: ' + JSON.stringify(msg.errors, null, '\t'));
 
 if (Object.keys(msg.errors).length !== 0) {
   throw new Error(JSON.stringify(msg.errors, null, '\t'));

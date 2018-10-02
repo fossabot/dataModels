@@ -1,7 +1,5 @@
 /* handle warning and error messages */
 
-
-
 const path = require('path');
 
 const warnings = {};
@@ -59,5 +57,5 @@ module.exports = {
   //add valid example to the valid examples map for a given model
   addSupportedExample(modelPath, message) {
     return addMessageToMap(modelPath, message, supportedExamples);
-  }
+  },
 };
