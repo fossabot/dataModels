@@ -79,7 +79,7 @@ module.exports = {
             fileExists(path.join(fullPath, value), 'introduction.md'))
          {check = true;}
       } catch (err) {
-        console.log('***ERROR*** ' + err);
+        // Deliberately swallow the error.
       }
     });
 
@@ -99,7 +99,7 @@ module.exports = {
         fs.lstatSync(path.join(fullPath, value)).isDirectory();
         counter++;
       } catch (err) {
-        console.log('***ERROR*** ' + err);
+        // Deliberately swallow the error.
       }
     });
     if (counter === 0)
