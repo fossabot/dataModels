@@ -1,27 +1,27 @@
 /* provide functions to support the  the data model validator */
 
-'use strict';
 
-var nconf = require('nconf');
-var fs = require('fs');
-var schema = require('./schema.js');
-var pjson = require('../package.json');
 
-var ignoreWarnings = false;
-var failWarnings = false;
-var failErrors = true;
-var ajvOptions = {};
+const nconf = require('nconf');
+const fs = require('fs');
+const schema = require('./schema.js');
+const pjson = require('../package.json');
+
+let ignoreWarnings = false;
+let failWarnings = false;
+let failErrors = true;
+let ajvOptions = {};
 
 module.exports = {
   /* export variables */
-  nconf: nconf,
-  ignoreWarnings: ignoreWarnings,
-  failWarnings: failWarnings,
-  failErrors: failErrors,
-  ajvOptions: ajvOptions,
+  nconf,
+  ignoreWarnings,
+  failWarnings,
+  failErrors,
+  ajvOptions,
 
   /* load configuration from arg and config.json file (if any)*/
-  load: function() {
+  load() {
     nconf.argv({
       'i': {
         alias: 'dmv:importSchemas',
@@ -73,7 +73,7 @@ module.exports = {
 
   /* load default values
   TODO: fix issues with nconf.default */
-  defaults: function() {
+  defaults() {
     if (nconf.get('dmv:importSchemas') == null) {
       nconf.set('dmv:importSchemas',
         [
@@ -139,8 +139,8 @@ module.exports = {
         .concat(['.git', 'node_modules', 'validator']));
 
     /* error and warnings management configuration */
-    ignoreWarnings = (nconf.get('dmv:warnings') == 'ignore');
-    failWarnings = (nconf.get('dmv:warnings') == 'fail');
+    ignoreWarnings = (nconf.get('dmv:warnings') === 'ignore');
+    failWarnings = (nconf.get('dmv:warnings') === 'fail');
     failErrors = (!nconf.get('ajv:allErrors'));
     /* set ajv options */
     ajvOptions = {
@@ -155,7 +155,7 @@ module.exports = {
     return true;
   },
 
-  help: function() {
+  help() {
     if (nconf.get('h')) {
       nconf.stores.argv.showHelp();
       return true;
@@ -163,26 +163,27 @@ module.exports = {
     return false;
   },
 
-  showHelp: function() {
+  showHelp() {
       nconf.stores.argv.showHelp();
   },
 
-  version: function() {
+  version() {
     if (nconf.get('v')) {
+      // eslint-disable-next-line no-console
       console.log("data model validator version: " + pjson.version);
       return true;
     }
     return false;
   },
   /* Check configuration validity */
-  validate: function() {
+  validate() {
     nconf.required(['dmv:path',]);
     return true;
   },
 
   /* Check path validity */
-  validatePath: function() {
-    var stats = fs.lstatSync(nconf.get('dmv:path'));
+  validatePath() {
+    const stats = fs.lstatSync(nconf.get('dmv:path'));
     // Is it a directory?
     if (!stats.isDirectory()) {
       throw new Error('The path passed must be a directory');

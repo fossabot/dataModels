@@ -1,13 +1,15 @@
 #!/usr/bin/env node
-'use strict';
-var fs = require('fs');
-var path = require('path');
-var conf = require('./libs/conf.js');
-var msg = require('./libs/message.js');
-var schema = require('./libs/schema.js');
-var checks = require('./libs/checks.js');
+
+const fs = require('fs');
+const path = require('path');
+const conf = require('./libs/conf.js');
+const msg = require('./libs/message.js');
+const schema = require('./libs/schema.js');
+const checks = require('./libs/checks.js');
 
 const debug = require('debug')('validate');
+
+/* eslint no-console: "off" */
 
 /* load conf from command line and/or config.js */
 conf.load();
@@ -15,10 +17,10 @@ conf.load();
 conf.defaults();
 /* print help if -h option and exit */
 if (conf.help())
-  return;
+  {process.exit();}
 /* print version if -v option and exit */
 if (conf.version())
-  return;
+  {process.exit();}
 /* validate command line input */
 try {
   conf.validate();
@@ -27,25 +29,25 @@ try {
   process.exitCode = -1;
   console.error('\n Invalid Configuration:' + err.message + '\n');
   conf.showHelp();
-  return;
+  process.exit();
 }
 
 // Path Scan function
 
-var dive = function(basePath, schemas) {
+const dive = function(basePath, schemas) {
 
   debug('*dive* basePath: '+basePath);
   debug('*dive* processPath: '+process.cwd());
 
-  var localCommonSchemas = Array.from(schemas);
+  let localCommonSchemas = Array.from(schemas);
 
   debug('*dive* localSchema: ' + localCommonSchemas);
 
-  debug('*dive* root path: ' + (path.basename(basePath) == 'dataModels'));
+  debug('*dive* root path: ' + (path.basename(basePath) === 'dataModels'));
 
   debug('*dive* basename: ' + path.basename(basePath));
 
-  var fullPath = basePath;
+  const fullPath = basePath;
 
   debug('*dive* fullPath: ' + fullPath);
 
@@ -61,66 +63,66 @@ var dive = function(basePath, schemas) {
     debug('*dive* running checkers');
 
     //is the modelNameValid?
-    if (path.basename(basePath) != 'dataModels' &&
+    if (path.basename(basePath) !== 'dataModels' &&
         conf.nconf.get('dmv:warningChecks').includes('modelNameValid') &&
         !conf.ignoreWarnings)
-      checks.modelNameValid(fullPath);
+      {checks.modelNameValid(fullPath);}
 
     //does the data model include a documentation folder?
-    if (path.basename(basePath) != 'dataModels' &&
+    if (path.basename(basePath) !== 'dataModels' &&
         conf.nconf.get('dmv:warningChecks').includes('docFolderExist') &&
         !conf.ignoreWarnings)
-      checks.docFolderExist(fullPath);
+      {checks.docFolderExist(fullPath);}
 
     //is there a JSON Schema file?
-    if (path.basename(basePath) != 'dataModels' &&
+    if (path.basename(basePath) !== 'dataModels' &&
         conf.nconf.get('dmv:warningChecks').includes('schemaExist') &&
         !conf.ignoreWarnings)
-      checks.schemaExist(fullPath);
+      {checks.schemaExist(fullPath);}
 
     //is there one or more JSON Example
-    if (path.basename(basePath) != 'dataModels' &&
+    if (path.basename(basePath) !== 'dataModels' &&
         conf.nconf.get('dmv:warningChecks').includes('exampleExist') &&
         !conf.ignoreWarnings)
-      checks.exampleExist(fullPath);
+      {checks.exampleExist(fullPath);}
 
     //is there a readme file?
     if (conf.nconf.get('dmv:warningChecks').includes('readmeExist') &&
         !conf.ignoreWarnings)
-      checks.readmeExist(fullPath);
+      {checks.readmeExist(fullPath);}
 
     //are links in the documentation valid? TODO
-    if (path.basename(basePath) != 'dataModels' &&
+    if (path.basename(basePath) !== 'dataModels' &&
         conf.nconf.get('dmv:warningChecks').includes('docValidLinks') &&
         !conf.ignoreWarnings)
-      checks.docValidLinks(fullPath);
+      {checks.docValidLinks(fullPath);}
 
     //is the documentation valid? TODO
-    if (path.basename(basePath) != 'dataModels' &&
+    if (path.basename(basePath) !== 'dataModels' &&
         conf.nconf.get('dmv:warningChecks').includes('docValid') &&
         !conf.ignoreWarnings)
-      checks.docValid(fullPath);
+      {checks.docValid(fullPath);}
 
     //is the schema id matching the name of the folder? TODO
-    if (path.basename(basePath) != 'dataModels' &&
+    if (path.basename(basePath) !== 'dataModels' &&
         conf.nconf.get('dmv:warningChecks').includes('idMatching') &&
         !conf.ignoreWarnings)
-      checks.idMatching(fullPath);
+      {checks.idMatching(fullPath);}
 
     //does it exists the documentation of the data model?
-    if (path.basename(basePath) != 'dataModels' &&
+    if (path.basename(basePath) !== 'dataModels' &&
         !conf.ignoreWarnings &&
         conf.nconf.get('dmv:warningChecks').includes('docExist'))
-      checks.docExist(fullPath);
+      {checks.docExist(fullPath);}
 
     try {
       //schema compilation and example validation
-      var validate;
+      let validate;
 
       if (conf.nconf.get('dmv:loadModelCommonSchemas') &&
-          checks.fileExists(fullPath, '.+-schema\.json')) {
+          checks.fileExists(fullPath, '.+-schema.json')) {
 
-        var schemaFiles = schema.getFiles(fullPath + path.sep + '*-schema.json');
+        const schemaFiles = schema.getFiles(fullPath + path.sep + '*-schema.json');
         debug('*dive* validate common schemas :' + files);
         if (!conf.nconf.get('dmv:resolveRemoteSchemas')){
           schemaFiles.forEach(function(fileName) {
@@ -143,14 +145,14 @@ var dive = function(basePath, schemas) {
         conf.nconf.get('dmv:loadModelCommonSchemas'));
 
       if (conf.nconf.get('dmv:loadModelCommonSchemas'))
-        localCommonSchemas =
+        {localCommonSchemas =
           schema.addUniqueToArray(
             localCommonSchemas,
             schema.loadLocalSchemas(basePath)
-        );
+        );}
 
 
-      if (path.basename(basePath) != 'dataModels' &&
+      if (path.basename(basePath) !== 'dataModels' &&
           checks.fileExists(fullPath, '^schema\\.json')) {
         debug('*dive* run schema validation');
         if (!conf.nconf.get('dmv:resolveRemoteSchemas')) {
@@ -168,14 +170,14 @@ var dive = function(basePath, schemas) {
         }
       }
 
-      if (path.basename(basePath) != 'dataModels' &&
+      if (path.basename(basePath) !== 'dataModels' &&
           checks.fileExists(fullPath, '^example(-\\d+)?\\.json') &&
           conf.nconf.get('dmv:validateExamples')) {
         debug('*dive* run example validation');
         schema.validateExamples(fullPath, validate);
       }
 
-      if (path.basename(basePath) != 'dataModels' &&
+      if (path.basename(basePath) !== 'dataModels' &&
           checks.fileExists(fullPath, '^example(-\\d+)?\\.json') &&
           conf.nconf.get('dmv:contextBroker')) {
         debug('*dive* check example support');
@@ -183,42 +185,42 @@ var dive = function(basePath, schemas) {
       }
 
       //dive in again if recursion is enabled
-      var files = fs.readdirSync(basePath);
+      const files = fs.readdirSync(basePath);
 
       if (conf.nconf.get('dmv:recursiveScan'))
-        files.forEach(function(fileName) {
+        {files.forEach(function(fileName) {
           debug('*dive* recursion on ' + fileName);
           try {
-            var fullPath = basePath + path.sep + fileName;
-            var stat = fs.lstatSync(fullPath);
+            const fullPath = basePath + path.sep + fileName;
+            const stat = fs.lstatSync(fullPath);
 
             //it's a directory -> run the validator inside
             if (stat && stat.isDirectory())
-              dive(fullPath, localCommonSchemas);
+              {dive(fullPath, localCommonSchemas);}
 
           } catch (err) {
             console.log(err);
-            if (conf.failErrors) throw new Error(err.message);
+            if (conf.failErrors) {throw new Error(err.message);}
           }
-        });
+        });}
     } catch (err) {
       console.log(err);
-      if (conf.failErrors) throw new Error(err.message);
+      if (conf.failErrors) {throw new Error(err.message);}
     }
   }
 };
 
 console.log('*** Active Warnings ***:' + conf.nconf.get('dmv:warningChecks'));
 
-var scanningPath = path.resolve(process.cwd(),conf.nconf.get('dmv:path'));
+const scanningPath = path.resolve(process.cwd(),conf.nconf.get('dmv:path'));
 
 console.log('scan: ' + scanningPath);
 
 /* absolute schema path */
-var schemas = [];
+const schemas = [];
 
 conf.nconf.get('dmv:importSchemas').forEach(function(schema) {
-  var schemaFullPath = path.resolve(process.cwd(),schema);
+  const schemaFullPath = path.resolve(process.cwd(),schema);
   schemas.push(schemaFullPath);
 });
 
@@ -237,5 +239,5 @@ console.log('*** Warnings ***: ' +
 console.log('*** Errors ***: ' +
   JSON.stringify(msg.errors, null, '\t'));
 
-if (Object.keys(msg.errors).length != 0)
-  throw new Error(JSON.stringify(msg.errors, null, '\t'));
+if (Object.keys(msg.errors).length !== 0)
+  {throw new Error(JSON.stringify(msg.errors, null, '\t'));}
