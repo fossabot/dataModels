@@ -13,17 +13,20 @@ const supportedExamples = {};
 const addMessageToMap = function(modelPath, message, map) {
   const rootModel = getRootModelName(modelPath);
   const fullMessage = modelPath + ': ' + message;
-  if (map[rootModel] != null)
-  {map[rootModel].push(fullMessage);}
-  else
-  {map[rootModel] = [fullMessage];}
+  if (map[rootModel] != null) {
+    map[rootModel].push(fullMessage);
+  } else {
+    map[rootModel] = [fullMessage];
+  }
   return true;
 };
 
 //given a path, retrieve the name of the root model
 const getRootModelName = function(fullPath) {
   const index = fullPath.indexOf(path.sep);
-  if (index > 0) {return fullPath.substring(0, index);}
+  if (index > 0) {
+    return fullPath.substring(0, index);
+  }
   return fullPath;
 };
 

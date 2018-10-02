@@ -23,77 +23,75 @@ module.exports = {
   /* load configuration from arg and config.json file (if any)*/
   load() {
     nconf.argv({
-      'i': {
-        alias: 'dmv:importSchemas',
-        describe: 'Additional schemas that will be included' +
-          ' during validation. Default imported schemas are: ' +
-          ' common-schema.json, geometry-schema.json',
-        type: 'array',
-      },
-      'w' : {
-        alias: 'dmv:warnings',
-        describe: 'How to handle FIWARE Data Models checks warnings.\n' +
-          'true (default) - print warnings, but does not fail. \n' +
-          'ignore -  do nothing and do not print warnings.\n' +
-          ' fail - print warnings, and fails.',
-        type: 'string',
-      },
-      'p' : {
-        alias: 'dmv:path',
-        describe: 'The path of FIWARE Data Model(s) to be validated ' +
-          '(if recursion enabled, it will be the starting point of recursion)',
-        demand: false,
-        type: 'string',
-      },
-      'c': {
-        alias: 'dmv:contextBroker',
-        describe: 'Enable JSON example testing with Orion Context Broker',
-        type: 'boolean',
-        demand: false,
-      },
-      'u': {
-        alias: 'dmv:contextBrokerUrl',
-        describe: 'Orion Context Broker Url for example testing',
-        type: 'string',
-        demand: false,
-      },
-      'v' : {
-        alias: 'version',
-        describe: 'Print the current version',
-        demand: false,
-      },
-      'h' : {
-        alias: 'help',
-        describe: 'Print the help message',
-        demand: false,
-      },
-    },'Usage: validate -p DataModel -w ignore ' +
-        '-i [common-schema.json,geometry-schema.json]').file('config.json');
+        'i': {
+          alias: 'dmv:importSchemas',
+          describe: 'Additional schemas that will be included' +
+            ' during validation. Default imported schemas are: ' +
+            ' common-schema.json, geometry-schema.json',
+          type: 'array',
+        },
+        'w': {
+          alias: 'dmv:warnings',
+          describe: 'How to handle FIWARE Data Models checks warnings.\n' +
+            'true (default) - print warnings, but does not fail. \n' +
+            'ignore -  do nothing and do not print warnings.\n' +
+            ' fail - print warnings, and fails.',
+          type: 'string',
+        },
+        'p': {
+          alias: 'dmv:path',
+          describe: 'The path of FIWARE Data Model(s) to be validated ' +
+            '(if recursion enabled, it will be the starting point of recursion)',
+          demand: false,
+          type: 'string',
+        },
+        'c': {
+          alias: 'dmv:contextBroker',
+          describe: 'Enable JSON example testing with Orion Context Broker',
+          type: 'boolean',
+          demand: false,
+        },
+        'u': {
+          alias: 'dmv:contextBrokerUrl',
+          describe: 'Orion Context Broker Url for example testing',
+          type: 'string',
+          demand: false,
+        },
+        'v': {
+          alias: 'version',
+          describe: 'Print the current version',
+          demand: false,
+        },
+        'h': {
+          alias: 'help',
+          describe: 'Print the help message',
+          demand: false,
+        },
+      }, 'Usage: validate -p DataModel -w ignore ' +
+      '-i [common-schema.json,geometry-schema.json]').file('config.json');
   },
 
   /* load default values
   TODO: fix issues with nconf.default */
   defaults() {
     if (nconf.get('dmv:importSchemas') == null) {
-      nconf.set('dmv:importSchemas',
-        [
-          'common-schema.json',
-          'geometry-schema.json'
-        ]);
+      nconf.set('dmv:importSchemas', [
+        'common-schema.json',
+        'geometry-schema.json'
+      ]);
     }
     if (nconf.get('dmv:warnings') == null) {
       nconf.set('dmv:warnings', 'true');
     }
     if (nconf.get('dmv:warningChecks') == null) {
-      nconf.set('dmv:warningChecks',
-        [
-          'schemaExist',
-          'docExist',
-          'docFolderExist',
-          'exampleExist',
-          'modelNameValid',
-          'readmeExist'
-        ]);
+      nconf.set('dmv:warningChecks', [
+        'schemaExist',
+        'docExist',
+        'docFolderExist',
+        'exampleExist',
+        'modelNameValid',
+        'readmeExist'
+      ]);
     }
     if (nconf.get('dmv:recursiveScan') == null) {
       nconf.set('dmv:recursiveScan', true);
@@ -111,13 +109,13 @@ module.exports = {
       nconf.set('dmv:resolveRemoteSchemas', false);
     }
     if (nconf.get('dmv:ignoreFolders') == null) {
-      nconf.set('dmv:ignoreFolders', ['harvest', 'auxiliary',]);
+      nconf.set('dmv:ignoreFolders', ['harvest', 'auxiliary', ]);
     }
     if (nconf.get('dmv:docFolders') == null) {
-      nconf.set('dmv:docFolders', ['doc',]);
+      nconf.set('dmv:docFolders', ['doc', ]);
     }
     if (nconf.get('dmv:externalSchemaFolders') == null) {
-      nconf.set('dmv:externalSchemaFolders', ['externalSchema',]);
+      nconf.set('dmv:externalSchemaFolders', ['externalSchema', ]);
     }
     if (nconf.get('dmv:contextBroker') == null) {
       nconf.set('dmv:contextBroker', false);
@@ -136,7 +134,7 @@ module.exports = {
     }
     nconf.set('dmv:ignoreFolders',
       nconf.get('dmv:ignoreFolders')
-        .concat(['.git', 'node_modules', 'validator']));
+      .concat(['.git', 'node_modules', 'validator']));
 
     /* error and warnings management configuration */
     ignoreWarnings = (nconf.get('dmv:warnings') === 'ignore');
@@ -164,7 +162,7 @@ module.exports = {
   },
 
   showHelp() {
-      nconf.stores.argv.showHelp();
+    nconf.stores.argv.showHelp();
   },
 
   version() {
@@ -177,7 +175,7 @@ module.exports = {
   },
   /* Check configuration validity */
   validate() {
-    nconf.required(['dmv:path',]);
+    nconf.required(['dmv:path', ]);
     return true;
   },
 
