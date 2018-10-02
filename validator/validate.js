@@ -123,7 +123,7 @@ const dive = function(basePath, schemas) {
           checks.fileExists(fullPath, '.+-schema.json')) {
 
         const schemaFiles = schema.getFiles(fullPath + path.sep + '*-schema.json');
-        debug('*dive* validate common schemas :' + files);
+        debug('*dive* validate common schemas :' + schemaFiles);
         if (!conf.nconf.get('dmv:resolveRemoteSchemas')){
           schemaFiles.forEach(function(fileName) {
             debug('*dive* validate common schema :' + path.basename(fileName));
