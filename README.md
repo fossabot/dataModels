@@ -6,6 +6,7 @@
 [![Documentation](https://img.shields.io/readthedocs/fiware-datamodels.svg)](https://fiware-datamodels.rtfd.io)
 [![Build badge](https://img.shields.io/travis/Fiware/dataModels.svg "Travis build status")](https://travis-ci.org/Fiware/dataModels/)
 [![Support badge](https://img.shields.io/badge/support-askbot-yellowgreen.svg)](http://ask.fiware.org)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjason-fox%2FdataModels.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjason-fox%2FdataModels?ref=badge_shield)
 
 This repository contains: 
 * [JSON Schemas and documentation](./specs/README.md) on harmonized datamodels for smart cities, developed jointly with [OASC](http://oascities.org), and other domains. 
@@ -97,3 +98,7 @@ See:
 * [https://github.com/GSMADeveloper/HarmonisedEntityDefinitions](https://github.com/GSMADeveloper/HarmonisedEntityDefinitions)
 * [https://github.com/GSMADeveloper/HarmonisedEntityReferences](https://github.com/GSMADeveloper/HarmonisedEntityReferences)
 * [schema.org](https://schema.org)
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Fjason-fox%2FdataModels.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Fjason-fox%2FdataModels?ref=badge_large)
